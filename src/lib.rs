@@ -19,7 +19,31 @@ pub enum MessageStatus {
     #[serde(rename = "read")]
     Read,
     #[serde(rename = "failed")]
-    Failed
+    Failed,
+    #[serde(rename = "unknown")]
+    Unknown,
+}
+
+impl MessageStatus{
+    pub fn from_string(status: &str) -> MessageStatus {
+        match status {
+            "sent" => MessageStatus::Sent,
+            "delivered" => MessageStatus::Delivered,
+            "read" => MessageStatus::Read,
+            "failed" => MessageStatus::Failed,
+            _ => MessageStatus::Unknown
+        }
+    }
+
+    pub fn to_string(&self) -> String {
+        match self {
+            MessageStatus::Sent => "sent".to_string(),
+            MessageStatus::Delivered => "delivered".to_string(),
+            MessageStatus::Read => "read".to_string(),
+            MessageStatus::Failed => "failed".to_string(),
+            MessageStatus::Unknown => "unknown".to_string(),
+        }
+    }
 }
 
 #[derive(Debug, Serialize, Deserialize)]
