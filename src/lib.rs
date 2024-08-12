@@ -10,7 +10,6 @@ pub enum SharedAdapterError {
     DataFieldNotFound(String)
 }
 
-
 #[derive(Serialize, Deserialize, Debug)]
 pub enum MessageStatus {
     #[serde(rename = "sent")]
@@ -26,7 +25,7 @@ pub enum MessageStatus {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct StatusUpdate {
     pub recipient_id: String,
-    pub status: String,
+    pub status: MessageStatus,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
