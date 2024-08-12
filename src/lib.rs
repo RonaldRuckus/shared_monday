@@ -10,7 +10,7 @@ pub enum SharedAdapterError {
     DataFieldNotFound(String)
 }
 
-#[derive(Serialize, Deserialize, Debug, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
 pub enum MessageStatus {
     #[serde(rename = "sent")]
     Sent,
