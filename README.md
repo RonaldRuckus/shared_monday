@@ -1,0 +1,1 @@
+This is just a simple shared structure I use between two servers for communication.
