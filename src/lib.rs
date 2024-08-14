@@ -24,6 +24,10 @@ pub enum MessageStatus {
     Pending,
     #[serde(rename = "unknown")]
     Unknown,
+    #[serde(rename = "responded")]
+    Responded,
+    #[serde(rename = "unsubscribed")]
+    Unsubscribed,
 }
 
 impl MessageStatus{
@@ -34,6 +38,8 @@ impl MessageStatus{
             "read" => MessageStatus::Read,
             "failed" => MessageStatus::Failed,
             "pending" => MessageStatus::Pending,
+            "responded" => MessageStatus::Responded,
+            "unsubscribed" => MessageStatus::Unsubscribed,
             _ => MessageStatus::Unknown
         }
     }
@@ -45,7 +51,9 @@ impl MessageStatus{
             MessageStatus::Read => "read".to_string(),
             MessageStatus::Failed => "failed".to_string(),
             MessageStatus::Pending => "pending".to_string(),
-            MessageStatus::Unknown => "unknown".to_string(),
+            MessageStatus::Responded => "responded".to_string(),
+            MessageStatus::Unsubscribed => "unsubscribed".to_string(),
+            _ => "unknown".to_string(),
         }
     }
 }
