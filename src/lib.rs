@@ -22,7 +22,7 @@ pub enum MessageStatus {
     Failed,
     #[serde(rename = "pending")]
     Pending,
-    #[serde(rename = "unknown")]
+    #[serde(rename = "Not Sent")]
     Unknown,
     #[serde(rename = "responded")]
     Responded,
@@ -53,7 +53,7 @@ impl MessageStatus{
             MessageStatus::Pending => "pending".to_string(),
             MessageStatus::Responded => "responded".to_string(),
             MessageStatus::Unsubscribed => "unsubscribed".to_string(),
-            _ => "unknown".to_string(),
+            _ => "not sent".to_string(),
         }
     }
 }
