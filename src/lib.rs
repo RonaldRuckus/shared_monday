@@ -10,6 +10,33 @@ pub enum SharedAdapterError {
     DataFieldNotFound(String)
 }
 
+pub enum AvailableTime {
+    Morning,
+    Afternoon,
+    Evening,
+    Unknown
+}
+
+impl AvailableTime {
+    pub fn to_string(&self) -> String {
+        match self {
+            AvailableTime::Morning => "morning".to_string(),
+            AvailableTime::Afternoon => "afternoon".to_string(),
+            AvailableTime::Evening => "evening".to_string(),
+            _ => "Unknown".to_string()
+        }
+    }
+
+    pub fn from_string(time: &str) -> AvailableTime {
+        match time.to_lowercase().as_str() {
+            "morning" => AvailableTime::Morning,
+            "afternoon" => AvailableTime::Afternoon,
+            "evening" => AvailableTime::Evening,
+            _ => AvailableTime::Unknown
+        }
+    }
+}
+
 #[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
 pub enum MessageStatus {
     #[serde(rename = "sent")]
@@ -58,11 +85,23 @@ impl MessageStatus{
     }
 }
 
+/// Represents a status update regarding a WhatsApp message
 #[derive(Debug, Serialize, Deserialize)]
 pub struct StatusUpdate {
     pub recipient_id: String,
     pub status: MessageStatus,
 }
+
+/// Represents a completed appointment request
+#[derive(Debug, Serialize, Deserialize)]
+pub struct AppointmentRequest {
+    pub name: String,
+    pub phone_number: String,
+    pub availabilities: Vec<String>,
+    pub additional_information: String,
+    pub requested_date: String
+}
+
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct Item {
