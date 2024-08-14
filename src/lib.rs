@@ -28,7 +28,7 @@ pub enum MessageStatus {
 
 impl MessageStatus{
     pub fn from_string(status: &str) -> MessageStatus {
-        match status {
+        match status.to_lowercase().as_str() {
             "sent" => MessageStatus::Sent,
             "delivered" => MessageStatus::Delivered,
             "read" => MessageStatus::Read,
