@@ -270,7 +270,7 @@ mod tests {
     fn test_message_ordering() {
         // First one should always win
         let contesants = vec![
-            // Ensure the Host always trumps Client
+            // Ensure the Host always trumps Client 
             (
                 MessageRecipient::Host(MessageStatus::Pending), 
                 MessageRecipient::Client(MessageStatus::Unsubscribed)
