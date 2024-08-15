@@ -1,8 +1,6 @@
-use std::{cmp::Ordering, collections::HashMap, fmt, str::FromStr};
+use std::{cmp::Ordering, collections::HashMap, str::FromStr};
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
-use strum::EnumCount;
-use strum_macros::{EnumCount as EnumCountMacro, EnumIter};
 
 #[derive(Debug, Error)]
 pub enum SharedAdapterError {
@@ -44,49 +42,6 @@ impl From<AvailableTime> for String {
 }
 
 #[derive(Serialize, Deserialize, Debug, PartialEq, Eq, Clone)]
-#[serde(rename_all = "lowercase")]
-pub enum MessageRecipient {
-    Host(MessageStatus),
-    Client(MessageStatus),
-}
-
-impl fmt::Display for MessageRecipient {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        match self {
-            MessageRecipient::Host(status) => write!(f, "Host: {}", status.to_string()),
-            MessageRecipient::Client(status) => write!(f, "Client: {}", status.to_string()),
-        }
-    }
-}
-
-impl FromStr for MessageRecipient {
-    type Err = String;
-
-    fn from_str(s: &str) -> Result<Self, Self::Err> {
-        let parts: Vec<&str> = s.split(':').collect();
-        if parts.len() != 2 {
-            return Err(format!("Invalid MessageRecipient format: {}", s));
-        }
-
-        let status = MessageStatus::from_str(parts[1])?;
-        match parts[0] {
-            "Host" => Ok(MessageRecipient::Host(status)),
-            "Client" => Ok(MessageRecipient::Client(status)),
-            _ => Err(format!("Unknown recipient type: {}", parts[0])),
-        }
-    }
-}
-
-impl MessageRecipient {
-    fn to_index(&self) -> u8 {
-        match self {
-            MessageRecipient::Client(status) => status.to_index(),
-            MessageRecipient::Host(status) => status.to_index() + MessageStatus::COUNT as u8,
-        }
-    }
-}
-
-#[derive(Serialize, Deserialize, Debug, PartialEq, Eq, Clone, EnumCountMacro, EnumIter)]
 pub enum MessageStatus {
     #[serde(rename = "not sent")]
     Unknown,
@@ -133,18 +88,6 @@ impl Ord for MessageStatus {
     }
 }
 
-impl PartialOrd for MessageRecipient {
-    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
-        Some(self.cmp(other))
-    }
-}
-
-impl Ord for MessageRecipient {
-    fn cmp(&self, other: &Self) -> Ordering {
-        self.to_index().cmp(&other.to_index())
-    }
-}
-
 impl FromStr for MessageStatus {
     type Err = String;
 
@@ -183,7 +126,7 @@ impl MessageStatus{
 #[derive(Debug, Serialize, Deserialize)]
 pub struct StatusUpdate {
     pub recipient_id: String,
-    pub status: MessageRecipient,
+    pub status: MessageStatus,
 }
 
 /// Represents a completed appointment request
@@ -259,31 +202,5 @@ impl TryFrom<ItemsPage> for LeadDetails {
             .to_string();
 
         Ok(LeadDetails::new(name, phone_number)?)
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test_message_ordering() {
-        // First one should always win
-        let contesants = vec![
-            // Ensure the Host always trumps Client 
-            (
-                MessageRecipient::Host(MessageStatus::Pending), 
-                MessageRecipient::Client(MessageStatus::Unsubscribed)
-            ),
-            // Ensure the higher status always trumps the lower status
-            (
-                MessageRecipient::Host(MessageStatus::Unsubscribed),
-                MessageRecipient::Host(MessageStatus::Pending), 
-            ),
-        ];
-        
-        for (a, b) in contesants {
-            assert!(a > b);
-        }
     }
 }
