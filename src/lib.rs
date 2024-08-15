@@ -167,9 +167,6 @@ impl LeadDetails {
             phone_number.insert(0, '1');
         }
 
-        // Get the first name from the full `name`
-        let name = name.split_whitespace().next().unwrap().to_string();
-
         Ok(LeadDetails {
             name,
             phone_number
