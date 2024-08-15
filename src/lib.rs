@@ -100,7 +100,7 @@ pub struct StatusUpdate {
 /// Represents a completed appointment request
 #[derive(Debug, Serialize, Deserialize)]
 pub struct AppointmentRequest {
-    pub name: String,
+    pub name: Option<String>,
     pub phone_number: String,
     pub availabilities: Vec<AvailableTime>,
     pub additional_information: String,
