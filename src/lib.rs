@@ -41,25 +41,51 @@ impl From<AvailableTime> for String {
     }
 }
 
-
-#[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Eq, Clone)]
 pub enum MessageStatus {
+    #[serde(rename = "not sent")]
+    Unknown,
+    #[serde(rename = "pending")]
+    Pending,
+    #[serde(rename = "failed")]
+    Failed,
     #[serde(rename = "sent")]
     Sent,
     #[serde(rename = "delivered")]
     Delivered,
     #[serde(rename = "read")]
     Read,
-    #[serde(rename = "failed")]
-    Failed,
-    #[serde(rename = "pending")]
-    Pending,
-    #[serde(rename = "not sent")]
-    Unknown,
     #[serde(rename = "responded")]
     Responded,
     #[serde(rename = "unsubscribed")]
     Unsubscribed,
+}
+
+impl MessageStatus {
+    fn to_index(&self) -> u8 {
+        match self {
+            MessageStatus::Pending => 0,
+            MessageStatus::Sent => 1,
+            MessageStatus::Delivered => 2,
+            MessageStatus::Read => 3,
+            MessageStatus::Responded => 4,
+            MessageStatus::Failed => 5,
+            MessageStatus::Unknown => 6,
+            MessageStatus::Unsubscribed => 7,
+        }
+    }
+}
+
+impl PartialOrd for MessageStatus {
+    fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
+        self.to_index().partial_cmp(&other.to_index())
+    }
+}
+
+impl Ord for MessageStatus {
+    fn cmp(&self, other: &Self) -> std::cmp::Ordering {
+        self.to_index().cmp(&other.to_index())
+    }
 }
 
 impl MessageStatus{
