@@ -18,17 +18,8 @@ pub enum AvailableTime {
     Unknown
 }
 
-impl AvailableTime {
-    pub fn to_string(&self) -> String {
-        match self {
-            AvailableTime::Morning => "morning".to_string(),
-            AvailableTime::Afternoon => "afternoon".to_string(),
-            AvailableTime::Evening => "evening".to_string(),
-            _ => "unknown".to_string()
-        }
-    }
-
-    pub fn from_string(time: &str) -> AvailableTime {
+impl From<String> for AvailableTime {
+    fn from(time: String) -> Self {
         match time.to_lowercase().as_str() {
             "morning" => AvailableTime::Morning,
             "afternoon" => AvailableTime::Afternoon,
@@ -37,6 +28,18 @@ impl AvailableTime {
         }
     }
 }
+
+impl From<AvailableTime> for String {
+    fn from(time: AvailableTime) -> Self {
+        match time {
+            AvailableTime::Morning => "morning".to_string(),
+            AvailableTime::Afternoon => "afternoon".to_string(),
+            AvailableTime::Evening => "evening".to_string(),
+            _ => "unknown".to_string()
+        }
+    }
+}
+
 
 #[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
 pub enum MessageStatus {
