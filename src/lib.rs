@@ -1,4 +1,4 @@
-use std::{cmp::Ordering, collections::HashMap, str::FromStr};
+use std::{cmp::Ordering, collections::HashMap};
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
 
@@ -74,6 +74,32 @@ impl MessageStatus {
             MessageStatus::Unsubscribed => 7,
         }
     }
+
+    pub fn to_string(&self) -> String {
+        match self {
+            MessageStatus::Sent => "sent".to_string(),
+            MessageStatus::Delivered => "delivered".to_string(),
+            MessageStatus::Read => "read".to_string(),
+            MessageStatus::Failed => "failed".to_string(),
+            MessageStatus::Pending => "pending".to_string(),
+            MessageStatus::Responded => "responded".to_string(),
+            MessageStatus::Unsubscribed => "unsubscribed".to_string(),
+            _ => "not sent".to_string(),
+        }
+    }
+
+    pub fn from_string(status: &str) -> MessageStatus {
+        match status {
+            "sent" => MessageStatus::Sent,
+            "delivered" => MessageStatus::Delivered,
+            "read" => MessageStatus::Read,
+            "failed" => MessageStatus::Failed,
+            "pending" => MessageStatus::Pending,
+            "responded" => MessageStatus::Responded,
+            "unsubscribed" => MessageStatus::Unsubscribed,
+            _ => MessageStatus::Unknown,
+        }
+    }
 }
 
 impl PartialOrd for MessageStatus {
@@ -87,41 +113,6 @@ impl Ord for MessageStatus {
         self.to_index().cmp(&other.to_index())
     }
 }
-
-impl FromStr for MessageStatus {
-    type Err = String;
-
-    fn from_str(s: &str) -> Result<Self, Self::Err> {
-        match s {
-            "not sent" => Ok(MessageStatus::Unknown),
-            "pending" => Ok(MessageStatus::Pending),
-            "failed" => Ok(MessageStatus::Failed),
-            "sent" => Ok(MessageStatus::Sent),
-            "delivered" => Ok(MessageStatus::Delivered),
-            "read" => Ok(MessageStatus::Read),
-            "responded" => Ok(MessageStatus::Responded),
-            "unsubscribed" => Ok(MessageStatus::Unsubscribed),
-            _ => Err(format!("Unknown MessageStatus: {}", s)),
-        }
-    }
-}
-
-
-impl MessageStatus{
-    pub fn to_string(&self) -> String {
-        match self {
-            MessageStatus::Sent => "sent".to_string(),
-            MessageStatus::Delivered => "delivered".to_string(),
-            MessageStatus::Read => "read".to_string(),
-            MessageStatus::Failed => "failed".to_string(),
-            MessageStatus::Pending => "pending".to_string(),
-            MessageStatus::Responded => "responded".to_string(),
-            MessageStatus::Unsubscribed => "unsubscribed".to_string(),
-            _ => "not sent".to_string(),
-        }
-    }
-}
-
 /// Represents a status update regarding a WhatsApp message
 #[derive(Debug, Serialize, Deserialize)]
 pub struct StatusUpdate {
