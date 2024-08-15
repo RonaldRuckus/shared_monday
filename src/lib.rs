@@ -1,4 +1,4 @@
-use std::{cmp::Ordering, collections::HashMap, fmt};
+use std::{cmp::Ordering, collections::HashMap, fmt, str::FromStr};
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
 use strum::EnumCount;
@@ -55,6 +55,24 @@ impl fmt::Display for MessageRecipient {
         match self {
             MessageRecipient::Host(status) => write!(f, "Host: {}", status.to_string()),
             MessageRecipient::Client(status) => write!(f, "Client: {}", status.to_string()),
+        }
+    }
+}
+
+impl FromStr for MessageRecipient {
+    type Err = String;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        let parts: Vec<&str> = s.split(':').collect();
+        if parts.len() != 2 {
+            return Err(format!("Invalid MessageRecipient format: {}", s));
+        }
+
+        let status = MessageStatus::from_str(parts[1])?;
+        match parts[0] {
+            "Host" => Ok(MessageRecipient::Host(status)),
+            "Client" => Ok(MessageRecipient::Client(status)),
+            _ => Err(format!("Unknown recipient type: {}", parts[0])),
         }
     }
 }
@@ -127,20 +145,26 @@ impl Ord for MessageRecipient {
     }
 }
 
-impl MessageStatus{
-    pub fn from_string(status: &str) -> MessageStatus {
-        match status.to_lowercase().as_str() {
-            "sent" => MessageStatus::Sent,
-            "delivered" => MessageStatus::Delivered,
-            "read" => MessageStatus::Read,
-            "failed" => MessageStatus::Failed,
-            "pending" => MessageStatus::Pending,
-            "responded" => MessageStatus::Responded,
-            "unsubscribed" => MessageStatus::Unsubscribed,
-            _ => MessageStatus::Unknown
+impl FromStr for MessageStatus {
+    type Err = String;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "not sent" => Ok(MessageStatus::Unknown),
+            "pending" => Ok(MessageStatus::Pending),
+            "failed" => Ok(MessageStatus::Failed),
+            "sent" => Ok(MessageStatus::Sent),
+            "delivered" => Ok(MessageStatus::Delivered),
+            "read" => Ok(MessageStatus::Read),
+            "responded" => Ok(MessageStatus::Responded),
+            "unsubscribed" => Ok(MessageStatus::Unsubscribed),
+            _ => Err(format!("Unknown MessageStatus: {}", s)),
         }
     }
+}
 
+
+impl MessageStatus{
     pub fn to_string(&self) -> String {
         match self {
             MessageStatus::Sent => "sent".to_string(),
