@@ -151,7 +151,7 @@ impl MessageStatus{
 #[derive(Debug, Serialize, Deserialize)]
 pub struct StatusUpdate {
     pub recipient_id: String,
-    pub status: MessageStatus,
+    pub status: MessageRecipient,
 }
 
 /// Represents a completed appointment request
