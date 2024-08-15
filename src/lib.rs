@@ -44,6 +44,7 @@ impl From<AvailableTime> for String {
 }
 
 #[derive(Serialize, Deserialize, Debug, PartialEq, Eq, Clone)]
+#[serde(rename_all = "lowercase")]
 pub enum MessageRecipient {
     Host(MessageStatus),
     Client(MessageStatus),
@@ -226,5 +227,31 @@ impl TryFrom<ItemsPage> for LeadDetails {
             .to_string();
 
         Ok(LeadDetails::new(name, phone_number)?)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_message_ordering() {
+        // First one should always win
+        let contesants = vec![
+            // Ensure the Host always trumps Client
+            (
+                MessageRecipient::Host(MessageStatus::Pending), 
+                MessageRecipient::Client(MessageStatus::Unsubscribed)
+            ),
+            // Ensure the higher status always trumps the lower status
+            (
+                MessageRecipient::Host(MessageStatus::Unsubscribed),
+                MessageRecipient::Host(MessageStatus::Pending), 
+            ),
+        ];
+        
+        for (a, b) in contesants {
+            assert!(a > b);
+        }
     }
 }
