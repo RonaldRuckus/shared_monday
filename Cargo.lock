@@ -84,7 +84,7 @@ dependencies = [
 
 [[package]]
 name = "shared_monday"
-version = "0.2.8"
+version = "0.3.0"
 dependencies = [
  "serde",
  "serde_json",
