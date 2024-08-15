@@ -10,6 +10,7 @@ pub enum SharedAdapterError {
     DataFieldNotFound(String)
 }
 
+#[derive(Debug, Serialize, Deserialize)]
 pub enum AvailableTime {
     Morning,
     Afternoon,
@@ -17,17 +18,8 @@ pub enum AvailableTime {
     Unknown
 }
 
-impl AvailableTime {
-    pub fn to_string(&self) -> String {
-        match self {
-            AvailableTime::Morning => "morning".to_string(),
-            AvailableTime::Afternoon => "afternoon".to_string(),
-            AvailableTime::Evening => "evening".to_string(),
-            _ => "Unknown".to_string()
-        }
-    }
-
-    pub fn from_string(time: &str) -> AvailableTime {
+impl From<String> for AvailableTime {
+    fn from(time: String) -> Self {
         match time.to_lowercase().as_str() {
             "morning" => AvailableTime::Morning,
             "afternoon" => AvailableTime::Afternoon,
@@ -97,7 +89,7 @@ pub struct StatusUpdate {
 pub struct AppointmentRequest {
     pub name: String,
     pub phone_number: String,
-    pub availabilities: Vec<String>,
+    pub availabilities: Vec<AvailableTime>,
     pub additional_information: String,
     pub requested_date: String
 }
