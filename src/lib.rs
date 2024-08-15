@@ -11,6 +11,7 @@ pub enum SharedAdapterError {
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
+#[serde(rename_all = "lowercase")]
 pub enum AvailableTime {
     Morning,
     Afternoon,
@@ -23,7 +24,7 @@ impl From<String> for AvailableTime {
         match time.to_lowercase().as_str() {
             "morning" => AvailableTime::Morning,
             "afternoon" => AvailableTime::Afternoon,
-            "evening" => AvailableTime::Evening,
+            "evening" => AvailableTime::Evening, 
             _ => AvailableTime::Unknown
         }
     }
@@ -53,7 +54,7 @@ pub enum MessageStatus {
     Failed,
     #[serde(rename = "pending")]
     Pending,
-    #[serde(rename = "Not Sent")]
+    #[serde(rename = "not sent")]
     Unknown,
     #[serde(rename = "responded")]
     Responded,
