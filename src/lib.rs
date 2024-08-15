@@ -10,7 +10,7 @@ pub enum SharedAdapterError {
     DataFieldNotFound(String)
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub enum AvailableTime {
     Morning,
     Afternoon,
