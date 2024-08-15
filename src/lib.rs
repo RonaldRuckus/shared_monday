@@ -1,4 +1,4 @@
-use std::{cmp::Ordering, collections::HashMap};
+use std::{cmp::Ordering, collections::HashMap, fmt};
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
 use strum::EnumCount;
@@ -50,6 +50,14 @@ pub enum MessageRecipient {
     Client(MessageStatus),
 }
 
+impl fmt::Display for MessageRecipient {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        match self {
+            MessageRecipient::Host(status) => write!(f, "Host: {}", status.to_string()),
+            MessageRecipient::Client(status) => write!(f, "Client: {}", status.to_string()),
+        }
+    }
+}
 
 impl MessageRecipient {
     fn to_index(&self) -> u8 {
