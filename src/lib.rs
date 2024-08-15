@@ -1,6 +1,8 @@
-use std::collections::HashMap;
+use std::{cmp::Ordering, collections::HashMap};
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
+use strum::EnumCount;
+use strum_macros::{EnumCount as EnumCountMacro, EnumIter};
 
 #[derive(Debug, Error)]
 pub enum SharedAdapterError {
@@ -42,6 +44,22 @@ impl From<AvailableTime> for String {
 }
 
 #[derive(Serialize, Deserialize, Debug, PartialEq, Eq, Clone)]
+pub enum MessageRecipient {
+    Host(MessageStatus),
+    Client(MessageStatus),
+}
+
+
+impl MessageRecipient {
+    fn to_index(&self) -> u8 {
+        match self {
+            MessageRecipient::Client(status) => status.to_index(),
+            MessageRecipient::Host(status) => status.to_index() + MessageStatus::COUNT as u8,
+        }
+    }
+}
+
+#[derive(Serialize, Deserialize, Debug, PartialEq, Eq, Clone, EnumCountMacro, EnumIter)]
 pub enum MessageStatus {
     #[serde(rename = "not sent")]
     Unknown,
@@ -77,13 +95,25 @@ impl MessageStatus {
 }
 
 impl PartialOrd for MessageStatus {
-    fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
-        self.to_index().partial_cmp(&other.to_index())
+    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+        Some(self.cmp(other))
     }
 }
 
 impl Ord for MessageStatus {
-    fn cmp(&self, other: &Self) -> std::cmp::Ordering {
+    fn cmp(&self, other: &Self) -> Ordering {
+        self.to_index().cmp(&other.to_index())
+    }
+}
+
+impl PartialOrd for MessageRecipient {
+    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+        Some(self.cmp(other))
+    }
+}
+
+impl Ord for MessageRecipient {
+    fn cmp(&self, other: &Self) -> Ordering {
         self.to_index().cmp(&other.to_index())
     }
 }
