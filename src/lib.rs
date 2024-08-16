@@ -66,11 +66,11 @@ impl MessageStatus {
         match self {
             MessageStatus::Unknown => 0,
             MessageStatus::Pending => 1,
-            MessageStatus::Sent => 2,
-            MessageStatus::Delivered => 3,
-            MessageStatus::Read => 4,
-            MessageStatus::Responded => 5,
-            MessageStatus::Failed => 6,
+            MessageStatus::Failed => 2,
+            MessageStatus::Sent => 3,
+            MessageStatus::Delivered => 4,
+            MessageStatus::Read => 5,
+            MessageStatus::Responded => 6,
             MessageStatus::Unsubscribed => 7,
         }
     }
