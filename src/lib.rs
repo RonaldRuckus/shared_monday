@@ -64,13 +64,13 @@ pub enum MessageStatus {
 impl MessageStatus {
     fn to_index(&self) -> u8 {
         match self {
-            MessageStatus::Pending => 0,
-            MessageStatus::Sent => 1,
-            MessageStatus::Delivered => 2,
-            MessageStatus::Read => 3,
-            MessageStatus::Responded => 4,
-            MessageStatus::Failed => 5,
-            MessageStatus::Unknown => 6,
+            MessageStatus::Unknown => 0,
+            MessageStatus::Pending => 1,
+            MessageStatus::Sent => 2,
+            MessageStatus::Delivered => 3,
+            MessageStatus::Read => 4,
+            MessageStatus::Responded => 5,
+            MessageStatus::Failed => 6,
             MessageStatus::Unsubscribed => 7,
         }
     }
