@@ -88,7 +88,7 @@ impl MessageStatus {
             MessageStatus::Responded => "responded".to_string(),
             MessageStatus::Unsubscribed => "unsubscribed".to_string(),
             MessageStatus::Unavailable => "unavailable".to_string(),
-            _ => "not sent".to_string(),
+            _ => "unknown".to_string(),
         }
     }
 
