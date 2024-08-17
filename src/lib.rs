@@ -47,8 +47,8 @@ pub enum MessageStatus {
     Unknown,
     #[serde(rename = "pending")]
     Pending,
-    #[serde(rename = "no whatsapp")]
-    NoWhatsApp,
+    #[serde(rename = "unavailable")]
+    Unavailable,
     #[serde(rename = "failed")]
     Failed,
     #[serde(rename = "sent")]
@@ -68,7 +68,7 @@ impl MessageStatus {
         match self {
             MessageStatus::Unknown => 0,
             MessageStatus::Pending => 1,
-            MessageStatus::NoWhatsApp => 2,
+            MessageStatus::Unavailable => 2,
             MessageStatus::Failed => 3,
             MessageStatus::Sent => 4,
             MessageStatus::Delivered => 5,
@@ -87,7 +87,7 @@ impl MessageStatus {
             MessageStatus::Pending => "pending".to_string(),
             MessageStatus::Responded => "responded".to_string(),
             MessageStatus::Unsubscribed => "unsubscribed".to_string(),
-            MessageStatus::NoWhatsApp => "no whatsapp".to_string(),
+            MessageStatus::Unavailable => "unavailable".to_string(),
             _ => "not sent".to_string(),
         }
     }
@@ -101,7 +101,7 @@ impl MessageStatus {
             "pending" => MessageStatus::Pending,
             "responded" => MessageStatus::Responded,
             "unsubscribed" => MessageStatus::Unsubscribed,
-            "no whatsapp" => MessageStatus::NoWhatsApp,
+            "unavailable" => MessageStatus::Unavailable,
             _ => MessageStatus::Unknown,
         }
     }
