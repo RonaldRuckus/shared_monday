@@ -64,7 +64,7 @@ pub enum MessageStatus {
 }
 
 impl MessageStatus {
-    fn to_index(&self) -> u8 {
+    pub fn to_index(&self) -> u8 {
         match self {
             MessageStatus::Unknown => 0,
             MessageStatus::Pending => 1,
