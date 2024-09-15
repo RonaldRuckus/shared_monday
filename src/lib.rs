@@ -63,7 +63,14 @@ pub enum MessageStatus {
     Unsubscribed,
 }
 
+impl Default for MessageStatus {
+    fn default() -> Self {
+        MessageStatus::Unknown
+    }
+}
+
 impl MessageStatus {
+
     pub fn to_index(&self) -> u8 {
         match self {
             MessageStatus::Unknown => 0,
